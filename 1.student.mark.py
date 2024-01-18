@@ -1,78 +1,72 @@
-students = []
-courses = []
-
 def input_no_of_student():
-    return int(input('Enter number of student'))
+    return int(input('Enter number of students: '))
 
-# Ask the user to enter a list of info for an type
 def input_infos():
-    name = input('Enter student name:')
-    dob = input('Enter student date of birth:')
-    id = input ('Enter student id:')
-    course = input('Enter student course name:')
+    name = input('Enter student name: ')
+    dob = input('Enter student date of birth: ')
+    id = input('Enter student ID: ')
+    return {'id': id, 'name': name, 'dob': dob}
 
-    return {'id':id, 'name':name, 'dob':dob, 'course':course}
+def input_number_of_courses():
+    return int(input('Enter the number of courses: '))
 
-# Input the student mark in a course base on the course id
-def input_mark(course):
+def input_course_info():
+    course_id = input('Enter course ID: ')
+    course_name = input('Enter course name: ')
+    return {'id': course_id, 'name': course_name}
+
+def input_mark(course, students):
+    marks = {}
+    print(f"Enter marks for course: {course['name']}")
     for student in students:
-        mark = float(input(f"enter marks for student {student['id']} in course {course}:"))
-    return mark
-    # TODO: check mark in student or not
-    # If not, enter the mark for the course
+        mark = float(input(f"Enter mark for student {student['name']} ({student['id']}): "))
+        marks[student['id']] = mark
+    return marks
 
-
-# Display a list of students
 def list_students(students):
-
-    # TODO: check what happens if there's no student (hint: len(students))
-    print("There aren't any students yet")
-
-    # TODO: display the student list
-    print("Here is the student list: ")
-
-    # TODO: add loop function to check the info of student
+    print('Students:')
     for student in students:
-        print(f"Student ID: {student['id']}, name: {student['name']}, date of birth: {student['DoB']}")
+        print(f"ID: {student['id']}, Name: {student['name']}, DoB: {student['dob']}")
 
-    # TODO: check if mark student and print out the information
-    if "marks" in student:
-        print("Marks (Course Id - Mark): ", end="")   
-
-# Display a list of courses
 def list_courses(courses):
-    # TODO: check what happens if there's no course (hint: len(course))
-    print("There aren't any courses yet")
-        
-    print("Here is the course list: ")
+    print('Courses:')
     for course in courses:
-        print(f"course:{course['name']}")
+        print(f"ID: {course['id']}, Name: {course['name']}")
 
-# Main function for the "game"
+def show_student_marks(course, marks):
+    print(f"Marks for course: {course['name']}")
+    for student_id, mark in marks.items():
+        print(f"Student ID: {student_id}, Mark: {mark}")
+
 def main():
-    # Initialize the list for DATA option
-    courses = []
     students = []
-    num_students = 0
-    num_courses = 0
+    courses = []
 
-    while(True):
-        print("""
-    0. Exit
-    1. 
-    2. 
-    ...
-    n
-    """)
-        option = int(input("Your choice: "))                                                         # Choose option from 0 -> n
-        if option == 0:
+    num_students = input_no_of_student()
+    for _ in range(num_students):
+        student_info = input_infos()
+        students.append(student_info)
+
+    num_courses = input_number_of_courses()
+    for _ in range(num_courses):
+        course_info = input_course_info()
+        courses.append(course_info)
+
+    list_courses(courses)
+    list_students(students)
+
+    selected_course_id = input("Enter the ID of the course to input marks for: ")
+    selected_course = None
+    for course in courses:
+        if course['id'] == selected_course_id:
+            selected_course = course
             break
 
-        elif option == 1:                                                                            # Option 1
-            input_something(student)
-        elif option == 2:                                                                            # Option 2                                                     
-            input_infos(course)
+    if selected_course:
+        marks = input_mark(selected_course, students)
+        show_student_marks(selected_course, marks)
+    else:
+        print("Invalid course ID.")
 
-# Call the main function
 if __name__ == "__main__":
     main()
